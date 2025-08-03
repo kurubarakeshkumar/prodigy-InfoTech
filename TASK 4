@@ -1,0 +1,58 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from wordcloud import WordCloud
+from textblob import TextBlob
+
+# Load dataset
+url = "https://raw.githubusercontent.com/Prodigy-InfoTech/data-science-datasets/main/Task%204/social_media.csv"
+df = pd.read_csv(url)
+
+# Preview data
+print(df.head())
+print("\nColumns:", df.columns)
+
+# --- Text Cleaning (Optional minimal cleaning here) ---
+df['text'] = df['text'].astype(str)
+
+# --- Sentiment Score using TextBlob ---
+def get_sentiment(text):
+    return TextBlob(text).sentiment.polarity
+
+df['polarity'] = df['text'].apply(get_sentiment)
+
+# --- Sentiment Category ---
+def get_sentiment_label(score):
+    if score > 0:
+        return 'Positive'
+    elif score < 0:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+df['sentiment'] = df['polarity'].apply(get_sentiment_label)
+
+# --- Count of Sentiment Types ---
+sns.countplot(x='sentiment', data=df, palette='pastel')
+plt.title("Sentiment Distribution")
+plt.xlabel("Sentiment")
+plt.ylabel("Number of Posts")
+plt.show()
+
+# --- WordCloud for All Posts ---
+text_all = " ".join(df['text'])
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text_all)
+plt.figure(figsize=(10, 5))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.title("WordCloud of All Posts")
+plt.show()
+
+# --- WordCloud for Positive Sentiment ---
+positive_text = " ".join(df[df['sentiment'] == 'Positive']['text'])
+positive_wc = WordCloud(width=800, height=400, background_color='lightgreen').generate(positive_text)
+plt.figure(figsize=(10, 5))
+plt.imshow(positive_wc, interpolation='bilinear')
+plt.axis("off")
+plt.title("WordCloud - Positive Posts")
+plt.show()
