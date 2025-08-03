@@ -1,0 +1,53 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load Titanic dataset
+url = "https://raw.githubusercontent.com/Prodigy-InfoTech/data-science-datasets/main/Task%202/titanic.csv"
+df = pd.read_csv(url)
+
+# --- Step 1: Initial Look ---
+print("Dataset Shape:", df.shape)
+print(df.head())
+print(df.info())
+print(df.describe())
+
+# --- Step 2: Missing Values ---
+print("\nMissing values:\n", df.isnull().sum())
+
+# Drop 'Cabin' due to many missing values, fill 'Age' and 'Embarked'
+df.drop('Cabin', axis=1, inplace=True)
+df['Age'].fillna(df['Age'].median(), inplace=True)
+df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
+
+# --- Step 3: Categorical Summary ---
+print("\nValue counts:\n", df['Sex'].value_counts())
+print(df['Embarked'].value_counts())
+
+# --- Step 4: Visualizations ---
+
+# 1. Survival Count
+sns.countplot(x='Survived', data=df, palette='pastel')
+plt.title('Survival Count')
+plt.show()
+
+# 2. Gender vs Survival
+sns.countplot(x='Sex', hue='Survived', data=df, palette='Set2')
+plt.title('Gender vs Survival')
+plt.show()
+
+# 3. Age Distribution
+sns.histplot(df['Age'], bins=30, kde=True, color='skyblue')
+plt.title('Age Distribution')
+plt.show()
+
+# 4. Class vs Survival
+sns.countplot(x='Pclass', hue='Survived', data=df, palette='coolwarm')
+plt.title('Passenger Class vs Survival')
+plt.show()
+
+# 5. Correlation Heatmap
+plt.figure(figsize=(10,6))
+sns.heatmap(df.corr(), annot=True, cmap='Blues')
+plt.title('Feature Correlation')
+plt.show()
