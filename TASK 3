@@ -1,0 +1,35 @@
+# Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import classification_report, accuracy_score
+import matplotlib.pyplot as plt
+
+# Load the dataset
+url = "https://raw.githubusercontent.com/Prodigy-InfoTech/data-science-datasets/main/Task%203/bank.csv"
+df = pd.read_csv(url, sep=';')
+
+# Preview data
+print(df.head())
+print("\nColumns:", df.columns)
+
+# Encode categorical variables using LabelEncoder
+le = LabelEncoder()
+for column in df.columns:
+    if df[column].dtype == 'object':
+        df[column] = le.fit_transform(df[column])
+
+# Split features and target
+X = df.drop('y', axis=1)
+y = df['y']  # Target variable: purchase (yes/no)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize and train Decision Tree
+model = DecisionTreeClassifier(criterion='entropy', max_depth=5, random_state=42)
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X
