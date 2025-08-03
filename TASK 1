@@ -1,0 +1,31 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+url = "https://raw.githubusercontent.com/Prodigy-InfoTech/data-science-datasets/main/Task%201/dataset.csv"
+df = pd.read_csv(url)
+
+# Display first few rows
+print(df.head())
+
+# Optional: check column names
+print(df.columns)
+
+# --- BAR CHART: Gender Distribution ---
+plt.figure(figsize=(6, 4))
+sns.countplot(data=df, x='Gender', palette='viridis')
+plt.title('Gender Distribution')
+plt.xlabel('Gender')
+plt.ylabel('Count')
+plt.tight_layout()
+plt.show()
+
+# --- HISTOGRAM: Age Distribution ---
+plt.figure(figsize=(6, 4))
+sns.histplot(data=df, x='Age', bins=10, kde=True, color='teal')
+plt.title('Age Distribution')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.tight_layout()
+plt.show()
